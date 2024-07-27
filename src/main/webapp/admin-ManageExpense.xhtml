@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Manage your Expenses</title>
+	<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+		rel="stylesheet" />
+</h:head>
+
+<h:body styleClass="flex bg-gray-900 text-gray-100">
+	<aside
+		class="flex flex-col w-64 h-screen px-5 py-8 overflow-y-auto bg-gray-800 border-r border-gray-700">
+		<h:form>
+			<h:commandLink action="#{redirectAdmin.backHome()}">
+				<h2 class="text-2xl font-semibold text-white">SpendWise 💸</h2>
+			</h:commandLink>
+		</h:form>
+
+		<div class="flex flex-col justify-between flex-1 mt-6">
+			<nav class="flex-1 -mx-3 space-y-3">
+				<h:form>
+					<h:commandLink
+						styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform"
+						action="#{redirectAdmin.backHome()}">
+						<h:graphicImage value="#{resource['images/new-home.png']}"
+							styleClass="w-5 h-5" />
+						<span class="mx-2 text-sm font-medium">Home</span>
+					</h:commandLink>
+				</h:form>
+				<!--  MIGHT BE USEFUL
+				<ui:repeat
+					value="#{['Dashboard', 'Projects', 'Tasks', 'Reporting', 'Users', 'Setting']}"
+					var="item">
+					<a
+						class="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform"
+						href="#"> <span class="mx-2 text-sm font-medium">#{item}</span>
+					</a>
+				</ui:repeat>
+				 -->
+				<h:panelGroup layout="block" styleClass="group">
+					<h:panelGroup layout="block"
+						styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+						onclick="toggleDetails(this)">
+						<h:graphicImage value="#{resource['images/users.png']}"
+							styleClass="w-5 h-5" />
+						<h:outputText value="Users" styleClass="mx-2 text-sm font-medium" />
+						<h:graphicImage value="#{resource['images/down.png']}"
+							styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+					</h:panelGroup>
+					<h:panelGroup layout="block"
+						styleClass="mt-2 space-y-1 px-4 hidden" id="userDetails">
+						<h:form>
+							<h:panelGroup layout="block">
+								<h:commandLink value="Add Basic User"
+									action="#{redirectAdmin.addUsers()}"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+							<h:panelGroup layout="block">
+								<h:commandLink action="#{redirectAdmin.manageUsers()}"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white">
+										Manage Users
+									</h:commandLink>
+							</h:panelGroup>
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup layout="block" styleClass="group">
+					<h:panelGroup layout="block"
+						styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+						onclick="toggleDetails(this)">
+						<h:graphicImage value="#{resource['images/corp.png']}"
+							styleClass="w-5 h-5" />
+						<h:outputText value="Corporate"
+							styleClass="mx-2 text-sm font-medium" />
+						<h:graphicImage value="#{resource['images/down.png']}"
+							styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+					</h:panelGroup>
+					<h:panelGroup layout="block"
+						styleClass="mt-2 space-y-1 px-4 hidden" id="corpDetails">
+						<h:form>
+							<h:panelGroup layout="block">
+								<h:commandLink action="#{redirectAdmin.createCompany()}"
+									value="Create Company"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+							<h:panelGroup layout="block">
+								<h:commandLink action="#{redirectAdmin.manageCorpUsers()}"
+									value="Corporate Users"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+							<h:panelGroup layout="block">
+								<h:commandLink value="Manage Companies"
+									action="#{redirectAdmin.manageCompanies()}"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup layout="block" styleClass="group">
+					<h:panelGroup layout="block"
+						styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+						onclick="toggleDetails(this)">
+						<h:graphicImage value="#{resource['images/expenses.png']}"
+							styleClass="w-5 h-5" />
+						<h:outputText value="Manage Expenses"
+							styleClass="mx-2 text-sm font-medium" />
+						<h:graphicImage value="#{resource['images/down.png']}"
+							styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+					</h:panelGroup>
+					<h:panelGroup layout="block"
+						styleClass="mt-2 space-y-1 px-4 hidden" id="expensesDetails">
+						<h:form>
+							<h:panelGroup layout="block">
+								<h:commandLink value="Add Expense"
+									action="#{redirectAdmin.addExpense()}"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+							<h:panelGroup layout="block">
+								<h:commandLink value="View All Expenses"
+									action="#{redirectAdmin.manageExpenses()}"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+
+
+				<h:panelGroup layout="block" styleClass="group">
+					<h:panelGroup layout="block"
+						styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+						onclick="toggleDetails(this)">
+						<h:graphicImage value="#{resource['images/monay.png']}"
+							styleClass="w-5 h-5" />
+						<h:outputText value="Accounts"
+							styleClass="mx-2 text-sm font-medium" />
+						<h:graphicImage value="#{resource['images/down.png']}"
+							styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+					</h:panelGroup>
+					<h:panelGroup layout="block"
+						styleClass="mt-2 space-y-1 px-4 hidden" id="accountsDetails">
+						<h:form>
+							<h:panelGroup layout="block">
+								<h:commandLink value="Create Account"
+									action="#{redirectAdmin.createAccount()}"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+							<h:panelGroup layout="block">
+								<h:commandLink value="Manage Accounts"
+									action="#{redirectAdmin.manageAccounts()}"
+									styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+							</h:panelGroup>
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+
+				<h:panelGroup layout="block"
+					styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform">
+					<h:graphicImage value="#{resource['images/admin.png']}"
+						styleClass="w-5 h-5" />
+					<h:form>
+						<h:commandLink value="Create new Admin"
+							action="#{redirectAdmin.createNewAdmin()}"
+							styleClass="mx-2 text-sm font-medium" />
+					</h:form>
+				</h:panelGroup>
+
+			</nav>
+
+			<div class="mt-6">
+				<div class="flex items-center justify-between mt-6">
+					<h:form styleClass="flex items-center justify-between w-full">
+						<h:commandLink action="#{redirectAdmin.accountSettings()}"
+							styleClass="flex items-center gap-x-2">
+							<h:graphicImage value="data:image/png;base64,#{admin.dp}"
+								styleClass="object-cover rounded-full h-9 w-9" alt="avatar"
+								rendered="#{not empty admin.dp}" />
+							<span class="text-sm font-medium text-gray-200 truncate">#{admin.name}</span>
+						</h:commandLink>
+						<h:commandLink action="#{redirectAdmin.adminLogout()}">
+							<h:graphicImage value="#{resource['images/logout.png']}"
+								styleClass="w-5 h-5 transition duration-300" />
+						</h:commandLink>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</aside>
+
+	<div class="flex-1 p-4 overflow-y-auto h-screen bg-gray-900">
+		<div
+			class="flex items-center justify-center p-5 border-2 border-gray-700 bg-gray-900 p-4 text-gray-200 h-5/6 border-dashed rounded-lg">
+			<!-- 
+			<h:outputText value="#{sessionScope.message}"
+					rendered="#{not empty sessionScope.message}" />
+				<h:outputText value="Welcome, #{sessionScope.adminUsername}"
+					rendered="#{not empty sessionScope.adminUsername}" />
+				<h:outputText value="Welcome, #{sessionScope.testing}"
+					rendered="#{not empty sessionScope.testing}" />
+					 -->
+			<h:form>
+				<h:dataTable value="#{expensesBean.expenses}" var="expense"
+					border="1">
+					<h:column>
+						<f:facet name="header">Date</f:facet>
+                #{expense.date}
+            </h:column>
+					<h:column>
+						<f:facet name="header">Title</f:facet>
+                #{expense.title}
+            </h:column>
+					<h:column>
+						<f:facet name="header">Description</f:facet>
+                #{expense.description}
+            </h:column>
+					<h:column>
+						<f:facet name="header">Amount</f:facet>
+                #{expense.amount}
+            </h:column>
+					<h:column>
+						<f:facet name="header">Account</f:facet>
+                #{expense.account.title}
+            </h:column>
+					<h:column>
+						<f:facet name="header">Download Bill</f:facet>
+						<h:commandLink value="Download"
+							action="#{expensesBean.downloadBill(expense.id)}" />
+					</h:column>
+				</h:dataTable>
+			</h:form>
+
+		</div>
+	</div>
+	<h:outputScript>
+    //<![CDATA[
+    function toggleDetails(element) {
+        var details = element.nextElementSibling;
+        if (details.classList.contains('hidden')) {
+            details.classList.remove('hidden');
+            element.querySelector('img:last-child').style.transform = 'rotate(180deg)';
+        } else {
+            details.classList.add('hidden');
+            element.querySelector('img:last-child').style.transform = 'rotate(0deg)';
+        }
+    }
+    //]]>
+	</h:outputScript>
+</h:body>
+
+</html>

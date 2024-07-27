@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Log Expenses</title>
+	<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+		rel="stylesheet" />
+</h:head>
+
+<style>
+/* Hide scrollbar for Chrome, Safari, and Edge */
+::-webkit-scrollbar {
+	display: none; /* Safari and Chrome */
+}
+
+/* Hide scrollbar for Firefox */
+html {
+	scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Internet Explorer and Edge */
+-ms-overflow-style:none ;
+	/* Internet Explorer and Edge */ .custom-date-input::-webkit-calendar-picker-indicator
+	{
+	display: none;
+}
+</style>
+
+<h:body styleClass="flex bg-gray-900 text-gray-100">
+	<h:panelGroup rendered="#{not empty sessionScope.adminId}">
+		<aside
+			class="flex flex-col w-64 h-screen px-5 py-8 overflow-y-auto bg-gray-800 border-r border-gray-700">
+			<h:form>
+				<h:commandLink action="#{redirectAdmin.backHome()}">
+					<h2 class="text-2xl font-semibold text-white">SpendWise 💸</h2>
+				</h:commandLink>
+			</h:form>
+
+			<div class="flex flex-col justify-between flex-1 mt-6">
+				<nav class="flex-1 -mx-3 space-y-3">
+					<h:form>
+						<h:commandLink
+							styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform"
+							action="#{redirectAdmin.backHome()}">
+							<h:graphicImage value="#{resource['images/new-home.png']}"
+								styleClass="w-5 h-5" />
+							<span class="mx-2 text-sm font-medium">Home</span>
+						</h:commandLink>
+					</h:form>
+					<!--  MIGHT BE USEFUL
+				<ui:repeat
+					value="#{['Dashboard', 'Projects', 'Tasks', 'Reporting', 'Users', 'Setting']}"
+					var="item">
+					<a
+						class="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform"
+						href="#"> <span class="mx-2 text-sm font-medium">#{item}</span>
+					</a>
+				</ui:repeat>
+				 -->
+					<h:panelGroup layout="block" styleClass="group">
+						<h:panelGroup layout="block"
+							styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+							onclick="toggleDetails(this)">
+							<h:graphicImage value="#{resource['images/users.png']}"
+								styleClass="w-5 h-5" />
+							<h:outputText value="Users" styleClass="mx-2 text-sm font-medium" />
+							<h:graphicImage value="#{resource['images/down.png']}"
+								styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+						</h:panelGroup>
+						<h:panelGroup layout="block"
+							styleClass="mt-2 space-y-1 px-4 hidden" id="userDetails">
+							<h:form>
+								<h:panelGroup layout="block">
+									<h:commandLink value="Add Basic User"
+										action="#{redirectAdmin.addUsers()}"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+								<h:panelGroup layout="block">
+									<h:commandLink action="#{redirectAdmin.manageUsers()}"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white">
+										Manage Users
+									</h:commandLink>
+								</h:panelGroup>
+							</h:form>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup layout="block" styleClass="group">
+						<h:panelGroup layout="block"
+							styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+							onclick="toggleDetails(this)">
+							<h:graphicImage value="#{resource['images/corp.png']}"
+								styleClass="w-5 h-5" />
+							<h:outputText value="Corporate"
+								styleClass="mx-2 text-sm font-medium" />
+							<h:graphicImage value="#{resource['images/down.png']}"
+								styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+						</h:panelGroup>
+						<h:panelGroup layout="block"
+							styleClass="mt-2 space-y-1 px-4 hidden" id="corpDetails">
+							<h:form>
+								<h:panelGroup layout="block">
+									<h:commandLink action="#{redirectAdmin.createCompany()}"
+										value="Create Company"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+								<h:panelGroup layout="block">
+									<h:commandLink action="#{redirectAdmin.manageCorpUsers()}"
+										value="Corporate Users"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+								<h:panelGroup layout="block">
+									<h:commandLink value="Manage Companies"
+										action="#{redirectAdmin.manageCompanies()}"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+							</h:form>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup layout="block" styleClass="group">
+						<h:panelGroup layout="block"
+							styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+							onclick="toggleDetails(this)">
+							<h:graphicImage value="#{resource['images/expenses.png']}"
+								styleClass="w-5 h-5" />
+							<h:outputText value="Manage Expenses"
+								styleClass="mx-2 text-sm font-medium" />
+							<h:graphicImage value="#{resource['images/down.png']}"
+								styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+						</h:panelGroup>
+						<h:panelGroup layout="block"
+							styleClass="mt-2 space-y-1 px-4 hidden" id="expensesDetails">
+							<h:form>
+								<h:panelGroup layout="block">
+									<h:commandLink value="Add Expense"
+										action="#{redirectAdmin.addExpense()}"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+								<h:panelGroup layout="block">
+									<h:commandLink value="View All Expenses"
+										action="#{redirectAdmin.manageExpenses()}"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+
+							</h:form>
+						</h:panelGroup>
+					</h:panelGroup>
+
+
+					<h:panelGroup layout="block" styleClass="group">
+						<h:panelGroup layout="block"
+							styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform cursor-pointer"
+							onclick="toggleDetails(this)">
+							<h:graphicImage value="#{resource['images/monay.png']}"
+								styleClass="w-5 h-5" />
+							<h:outputText value="Accounts"
+								styleClass="mx-2 text-sm font-medium" />
+							<h:graphicImage value="#{resource['images/down.png']}"
+								styleClass="w-5 h-5 ml-auto shrink-0 transition duration-300" />
+						</h:panelGroup>
+						<h:panelGroup layout="block"
+							styleClass="mt-2 space-y-1 px-4 hidden" id="accountsDetails">
+							<h:form>
+								<h:panelGroup layout="block">
+									<h:commandLink value="Create Account"
+										action="#{redirectAdmin.createAccount()}"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+								<h:panelGroup layout="block">
+									<h:commandLink value="Manage Accounts"
+										action="#{redirectAdmin.manageAccounts()}"
+										styleClass="block rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white" />
+								</h:panelGroup>
+							</h:form>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup layout="block"
+						styleClass="flex items-center px-3 py-2 text-gray-300 hover:text-white font-medium hover:bg-gray-700 rounded-lg transition-colors duration-300 transform">
+						<h:graphicImage value="#{resource['images/settings.png']}"
+							styleClass="w-5 h-5" />
+						<h:form>
+							<h:commandLink value="Manage profile"
+								action="#{redirectAdmin.accountSettings()}"
+								styleClass="mx-2 text-sm font-medium" />
+						</h:form>
+					</h:panelGroup>
+
+				</nav>
+
+				<div class="mt-6">
+					<div class="flex items-center justify-between mt-6">
+						<h:form styleClass="flex items-center justify-between w-full">
+							<h:commandLink action="#{redirectAdmin.accountSettings()}"
+								styleClass="flex items-center gap-x-2">
+								<h:graphicImage value="data:image/png;base64,#{admin.dp}"
+									styleClass="object-cover rounded-full h-9 w-9" alt="avatar"
+									rendered="#{not empty admin.dp}" />
+								<span class="text-sm font-medium text-gray-200 truncate">#{admin.name}</span>
+							</h:commandLink>
+							<h:commandLink action="#{redirectAdmin.adminLogout()}">
+								<h:graphicImage value="#{resource['images/logout.png']}"
+									styleClass="w-5 h-5 transition duration-300" />
+							</h:commandLink>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</aside>
+
+	</h:panelGroup>
+
+
+	<h:panelGroup>
+		<!-- rendered="#{not empty sessionScope.adminId}">  -->
+		<div class="flex-1 p-4 overflow-y-auto h-screen bg-gray-900">
+			<div
+				class="flex items-center justify-center border-2 border-gray-700 border-dashed h-screen rounded-lg">
+				<section
+					class="w-full max-w-2xl p-8 mx-auto rounded-lg shadow-lg bg-gray-800 border border-gray-700">
+					<h2 class="text-2xl font-bold text-white mb-6">Fill this form
+						to add an expense</h2>
+
+					<h:form enctype="multipart/form-data"
+						styleClass="max-w-2xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+						<div class="space-y-6">
+							<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+								<div class="col-span-1">
+									<div>
+										<h:outputLabel value="Title" for="title"
+											styleClass="block text-sm font-medium text-gray-300 mb-2" />
+										<h:inputText id="title" value="#{expenseBean.expense.title}"
+											styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+											a:placeholder="Enter Title" />
+									</div>
+								</div>
+								<div class="col-span-1">
+									<h:outputLabel value="Account" for="accountDropdown"
+										styleClass="block text-sm font-medium text-gray-300 mb-2" />
+									<h:selectOneMenu id="accountDropdown"
+										value="#{expenseBean.accTitle}"
+										styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+										<f:selectItem itemValue="" itemLabel="Select an account"
+											noSelectionOption="true" />
+										<f:selectItems value="#{expenseBean.accounts}" var="account"
+											itemValue="#{account}" itemLabel="#{account}" />
+									</h:selectOneMenu>
+								</div>
+
+
+							</div>
+							<div class="col-span-2">
+								<h:outputLabel value="Description" for="description"
+									styleClass="block text-sm font-medium text-gray-300 mb-2" />
+								<h:inputTextarea id="description"
+									value="#{expenseBean.expense.description}"
+									styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+									a:placeholder="Enter Description" />
+							</div>
+
+							<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+								<div>
+									<h:outputLabel value="Amount" for="amount"
+										styleClass="block text-sm font-medium text-gray-300 mb-2" />
+									<h:inputText id="amount" value="#{expenseBean.expense.amount}"
+										styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+										a:placeholder="Enter Amount" />
+								</div>
+								<h:panelGroup layout="block" styleClass="relative">
+									<h:outputLabel value="Date" for="dateInput"
+										styleClass="block text-sm font-medium text-gray-300 mb-2" />
+									<h:inputText id="dateInput" value="#{expenseBean.dateString}"
+										styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent pr-10">
+										<f:passThroughAttribute name="type" value="date" />
+									</h:inputText>
+								</h:panelGroup>
+
+							</div>
+
+							<div class="col-span-2">
+								<h:outputLabel value="Add your bill"
+									styleClass="block text-sm font-medium text-gray-300 mb-2" />
+								<div class="relative">
+									<h:inputFile id="dropzone-file" value="#{expenseBean.file}"
+										onchange="handleFileSelect(this)"
+										styleClass="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+									<div id="dropzone-content"
+										class="flex flex-col items-center justify-center w-full p-4 border-2 border-gray-600 border-dashed rounded-lg bg-gray-700 hover:bg-gray-600">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none"
+											viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+											class="w-8 h-8 text-gray-500 dark:text-gray-400">
+                <path stroke-linecap="round" stroke-linejoin="round"
+												d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+            </svg>
+										<h:outputText id="file-name" value="Add your bill"
+											styleClass="mb-1 text-sm font-medium text-gray-300" />
+										<h:outputText id="file-instruction"
+											value="Upload or drag &amp; drop your PDF"
+											styleClass="text-xs text-gray-400" />
+									</div>
+								</div>
+							</div>
+
+							<div class="mt-8">
+								<h:commandButton value="Add Expense"
+									action="#{expenseBean.addExpense}"
+									styleClass="w-full px-4 py-3 text-lg font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800" />
+							</div>
+						</div>
+					</h:form>
+				</section>
+			</div>
+		</div>
+	</h:panelGroup>
+	<script type="text/javascript">
+    //<![CDATA[
+    
+     function toggleDetails(element) {
+        var details = element.nextElementSibling;
+        if (details.classList.contains('hidden')) {
+            details.classList.remove('hidden');
+            element.querySelector('img:last-child').style.transform = 'rotate(180deg)';
+        } else {
+            details.classList.add('hidden');
+            element.querySelector('img:last-child').style.transform = 'rotate(0deg)';
+        }
+    }
+        
+    function handleFileSelect(input) {
+        const file = input.files[0];
+        const dropzoneContent = document.getElementById('j_idt73:dropzone-content');
+        const fileName = document.getElementById('j_idt73:file-name');
+        const fileInstruction = document.getElementById('j_idt73:file-instruction');
+
+        if (file) {
+            // Update text content
+            fileName.textContent = file.name;
+            fileInstruction.textContent = 'File selected';
+
+            // Change border color to indicate success
+            dropzoneContent.classList.remove('border-gray-600');
+            dropzoneContent.classList.add('border-green-500');
+
+            // Add a subtle animation
+            dropzoneContent.classList.add('animate-pulse');
+            setTimeout(() => {
+                dropzoneContent.classList.remove('animate-pulse');
+            }, 1000);
+        }
+    }
+    //]]>
+</script>
+
+</h:body>
+
+</html>

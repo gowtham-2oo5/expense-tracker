@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<meta charset="UTF-8" />
+	<title>Create New Admin</title>
+	<link
+		href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+		rel="stylesheet" />
+	<style>
+/* Scrollbar styling */
+::-webkit-scrollbar {
+	width: 12px;
+}
+
+::-webkit-scrollbar-track {
+	background: #1f2937;
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #8b5cf6;
+	border-radius: 10px;
+	border: 3px solid #1f2937;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #9f7aea;
+}
+
+/* For Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #8b5cf6 #1f2937;
+}
+</style>
+</h:head>
+<h:body styleClass="bg-gray-900">
+	<div class="flex-1 p-4 overflow-y-auto h-screen">
+		<div
+			class="flex items-center justify-center border-2 border-gray-700 border-dashed h-screen rounded-lg">
+			<section
+				class="w-full max-w-2xl p-8 mx-auto rounded-lg shadow-lg bg-gray-800 border border-gray-700">
+				<h2 class="text-2xl font-bold text-white mb-6">Fill this form
+					to create a new admin</h2>
+
+				<h:form enctype="multipart/form-data"
+					styleClass="max-w-2xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+					<div class="space-y-6">
+						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+							<div>
+								<h:outputLabel for="name" value="Name"
+									styleClass="block text-sm font-medium text-gray-300 mb-2" />
+								<h:inputText id="name" value="#{adminBean.name}"
+									styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+									a:placeholder="Enter admin name">
+									<f:validateRequired />
+								</h:inputText>
+								<h:message for="name" styleClass="text-red-500 text-sm mt-1" />
+							</div>
+							<div>
+								<h:outputLabel for="username" value="Username"
+									styleClass="block text-sm font-medium text-gray-300 mb-2" />
+								<h:inputText id="username" value="#{adminBean.uname}"
+									styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+									a:placeholder="Enter admin username">
+									<f:validateRequired />
+								</h:inputText>
+								<h:message for="username" styleClass="text-red-500 text-sm mt-1" />
+							</div>
+						</div>
+
+						<div class="col-span-2">
+							<h:outputLabel for="emailAddress" value="Email Address"
+								styleClass="block text-sm font-medium text-gray-300 mb-2" />
+							<h:inputText id="emailAddress" value="#{adminBean.mail}"
+								styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+								a:placeholder="Enter admin email address">
+								<f:validateRequired />
+								<f:validateRegex
+									pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
+							</h:inputText>
+							<h:message for="emailAddress"
+								styleClass="text-red-500 text-sm mt-1" />
+						</div>
+
+						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+							<div>
+								<h:outputLabel for="password" value="Password"
+									styleClass="block text-sm font-medium text-gray-300 mb-2" />
+								<h:inputSecret id="password" value="#{adminBean.password}"
+									styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+									a:placeholder="Enter admin password">
+									<f:validateRequired />
+									<f:validateLength minimum="6" maximum="12" />
+								</h:inputSecret>
+								<h:message for="password" styleClass="text-red-500 text-sm mt-1" />
+							</div>
+							<div>
+								<h:outputLabel for="phoneNumber" value="Phone Number"
+									styleClass="block text-sm font-medium text-gray-300 mb-2" />
+								<h:inputText id="phoneNumber" value="#{adminBean.phone}"
+									styleClass="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+									a:placeholder="Enter admin phone number">
+									<f:validateRequired />
+									<f:validateRegex pattern="^\d{10}$" />
+								</h:inputText>
+								<h:message for="phoneNumber"
+									styleClass="text-red-500 text-sm mt-1" />
+							</div>
+						</div>
+
+						<div class="col-span-2">
+							<h:outputLabel value="Profile picture"
+								styleClass="block text-sm font-medium text-gray-300 mb-2" />
+							<div class="relative" id="dropzone-container">
+								<h:inputFile id="dropzone-file" value="#{adminBean.dp}"
+									styleClass="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+									onchange="handleFileSelect(this)" />
+								<div id="dropzone-content"
+									class="flex flex-col items-center justify-center w-full p-4 border-2 border-gray-600 border-dashed rounded-lg bg-gray-700 hover:bg-gray-600">
+									<h:graphicImage name="images/dp.png" styleClass="w-8 h-8 mb-2"
+										id="preview-image" />
+									<p class="mb-1 text-sm font-medium text-gray-300"
+										id="file-name">Profile picture</p>
+									<p class="text-xs text-gray-400" id="file-instruction">Upload
+										or drag &amp; drop your PNG / JPG</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="mt-8">
+						<h:commandButton value="Save Changes"
+							action="#{adminBean.submit()}"
+							styleClass="w-full px-4 py-3 text-lg font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800" />
+					</div>
+				</h:form>
+
+			</section>
+		</div>
+	</div>
+
+	<h:outputScript>
+	 //<![CDATA[
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            const dropzoneContent = document.getElementById('dropzone-content');
+            const previewImage = document.getElementById('j_idt6:preview-image');
+            const fileName = document.getElementById('file-name');
+            const fileInstruction = document.getElementById('file-instruction');
+
+            if (file) {
+                // Read the file and set it as the source of the preview image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('w-8', 'h-8');
+                    previewImage.classList.add('w-16', 'h-16', 'object-cover', 'rounded-full');
+                }
+                reader.readAsDataURL(file);
+
+                // Update text content
+                fileName.textContent = file.name;
+                fileInstruction.textContent = 'Image selected';
+
+                // Change border color to indicate success
+                dropzoneContent.classList.remove('border-gray-600');
+                dropzoneContent.classList.add('border-green-500');
+
+                // Add a subtle animation
+                dropzoneContent.classList.add('animate-pulse');
+                setTimeout(() => {
+                    dropzoneContent.classList.remove('animate-pulse');
+                }, 1000);
+            }
+        }
+         //]]>
+	</h:outputScript>
+</h:body>
+</html>
